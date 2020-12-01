@@ -1,5 +1,5 @@
 
-import java.util.*; 
+// import java.util.*; 
 
 public class Dijkstra{
     int nroVertices;
@@ -19,11 +19,11 @@ public class Dijkstra{
         return posDelMinimo; 
     }
     
-    public void imprimir(int distancias[], ArrayList camino) 
+    public void imprimir(int distancias[], String[] camino) 
     { 
         System.out.println("Nro Router \t Distancia desde origen \t Camino"); 
         for (int i = 0; i < this.nroVertices; i++) 
-            System.out.println(i + " \t\t " + distancias[i]+ " \t\t\t\t " +camino.get(i)); 
+            System.out.println(i + " \t\t " + distancias[i]+ " \t\t\t\t " +camino[i]); 
     } 
     public void algoritmo(int matAdy[][], int src) 
     { 
@@ -32,23 +32,19 @@ public class Dijkstra{
   
         // Arreglo que almacenará el valor de Verdadero cuando se haya hallado el menor camino desde el origen.
         Boolean recorridos[] = new Boolean[this.nroVertices]; 
-        
-        ArrayList caminos = new ArrayList();
+        String[] camino = new String[matAdy.length];
         // Inicializar las distancias en infinito y la lista de nodos recorridos en Falso
         // Inicializar el Arraylist "Caminos" con n espacios, siendo n la cantidad de vértices
         for (int i = 0; i < this.nroVertices; i++) { 
             distancias[i] = Integer.MAX_VALUE; 
-            recorridos[i] = false; 
-            caminos.add(null);
+            recorridos[i] = false;
         } 
   
         // La distancia hacia el nodo origen es 0
         distancias[src] = 0; 
         
         //El único nodo a mostrar en el camino del origen es el nodo "src"
-        ArrayList temp = new ArrayList();
-        temp.add(src);
-        caminos.set(src, temp);
+        camino[src] = String.valueOf(src);
         
         // Para cada vértice:
         for (int count = 0; count < this.nroVertices; count++) { 
@@ -67,17 +63,12 @@ public class Dijkstra{
                    a la distancia hallada anteriormente.*/
                 if (!recorridos[v] && matAdy[u][v] != 0 && distancias[u] != Integer.MAX_VALUE && distancias[u] + matAdy[u][v] < distancias[v]) {
                     distancias[v] = distancias[u] + matAdy[u][v]; 
-                    // Agregar al camino del nodo V el camino del nodo anterior + el nodo V
-                    temp = new ArrayList();
-                    for (int i = 0; i < ((ArrayList)caminos.get(u)).size(); i++) {
-                        temp.add(((ArrayList)caminos.get(u)).get(i));
-                    }
-                    temp.add(v);
-                    caminos.set(v, temp);                    
+                    camino[v] = "";
+                    camino[v] += camino[u] + " -> "+ String.valueOf(v);
                 }
             } 
         } 
-        imprimir(distancias,caminos); 
+        imprimir(distancias,camino); 
     }
 
 
@@ -94,6 +85,6 @@ public class Dijkstra{
                                        { 8, 11, 0, 0, 0, 0, 1, 0, 7 }, 
                                        { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
         Dijkstra t = new Dijkstra(MatAdy.length); 
-        t.algoritmo(MatAdy, 5); 
+        t.algoritmo(MatAdy, 0); 
     } 
 }
