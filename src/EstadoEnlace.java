@@ -1,7 +1,6 @@
 import java.util.Scanner;
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntime.runtime;
 
-public class Dijkstra{
+public class EstadoEnlace{
     
     public static int[][] crearMatriz(){
         System.out.print("Ingrese la cantidad de nodos: ");
@@ -147,23 +146,37 @@ public class Dijkstra{
     
     public static void main(String[] args) 
     { 
-        /*int MatAdy[][] = new int[][] { { 0, 2, 4}, 
-                                       { 2, 3, 1}, 
-                                       { 4, 3, 2,}};
-        /*int MatAdy[][] = new int[][] { { 0, 8, 10, 0, 0 }, 
+        int MatAdy[][];
+        Scanner lector = new Scanner(System.in);
+        System.out.println("Ingrese el número de lo que desee realizar: ");
+        System.out.println("1. Mostrar resultado de topología básica. ");
+        System.out.println("2. Mostrar resultado de topología intermedia. ");
+        System.out.println("3. Mostrar resultado de topología avanzada. ");
+        System.out.println("4. Ingresar una nueva topología. ");
+        System.out.println();
+        int opt = lector.nextInt();
+        switch (opt){
+            case 1: 
+                int basic[][] = new int[][] { { 0, 8, 10, 0, 0 }, 
                                        { 8, 0, 3, 8, 0 }, 
                                        { 10, 3, 0, 5, 3 }, 
                                        { 0, 8, 5, 0, 6 }, 
-                                       { 0, 0, 3, 6, 0 }};*/
-        /*int MatAdy[][] = new int[][] { { 0, 8, 10, 0, 0, 4, 0, 0 }, 
+                                       { 0, 0, 3, 6, 0 }};
+                MatAdy = basic;
+                break;
+            case 2: 
+                int inter[][] = new int[][] { { 0, 8, 10, 0, 0, 4, 0, 0 }, 
                                        { 8, 0, 3, 8, 0, 3, 6, 0 }, 
                                        { 10, 3, 0, 5, 3, 0, 0, 0 }, 
                                        { 0, 8, 5, 0, 6, 0, 8, 5 }, 
                                        { 0, 0, 3, 6, 0, 0, 0, 3 }, 
                                        { 4, 3, 0, 0, 0, 0, 9, 0 }, 
                                        { 0, 6, 0, 8, 0, 9, 0, 9 }, 
-                                       { 0, 0, 0, 5, 3, 0, 9, 0 }}; */
-        /*int MatAdy[][] = new int[][] { { 0, 2, 0, 0, 10, 0, 0, 0, 0, 0, 15 }, 
+                                       { 0, 0, 0, 5, 3, 0, 9, 0 }};
+                MatAdy = inter;
+                break;
+            case 3: 
+                int avan[][] = new int[][] { { 0, 2, 0, 0, 10, 0, 0, 0, 0, 0, 15 }, 
                                        { 2, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0 }, 
                                        { 0, 8, 0, 0, 0, 0, 0, 0, 4, 0, 2 }, 
                                        { 0, 9, 0, 7, 0, 3, 0, 0, 0, 0, 0 }, 
@@ -173,11 +186,14 @@ public class Dijkstra{
                                        { 0, 0, 0, 3, 0, 0, 8, 0, 5, 0, 0 }, 
                                        { 0, 0, 4, 0, 0, 0, 0, 5, 0, 10, 0 },
                                        { 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 5 },
-                                       { 15, 0, 2, 0, 0, 0, 0, 0, 10, 5, 0 }};*/
-        int MatAdy[][] = crearMatriz();
+                                       { 15, 0, 2, 0, 0, 0, 0, 0, 10, 5, 0 }};
+                MatAdy = avan;
+                break;
+            default:
+                MatAdy = crearMatriz();
+        }
         System.out.println();
         System.out.print("¿Nodo origen? ");
-        Scanner lector = new Scanner(System.in);
         int src = lector.nextInt();
         System.out.println();
         algoritmo(MatAdy, src, MatAdy.length);        
