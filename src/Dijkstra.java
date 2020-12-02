@@ -1,17 +1,49 @@
-
-// import java.util.*; 
+import java.util.Scanner;
 
 public class Dijkstra{
-    int nroVertices;
-
-    public Dijkstra(int nroVertices) {
-        this.nroVertices = nroVertices;
+    
+    public static int[][] crearMatriz(){
+        System.out.print("Ingrese la cantidad de nodos: ");
+        Scanner lect = new Scanner(System.in);
+        int tam = lect.nextInt();
+        int MatAdy[][] = new int[tam][tam];
+        System.out.println();
+        for (int i = 0; i < tam; i++) {
+            System.out.println("Ingresando datos sobre el nodo "+i+"...");
+            while (true) {                
+                System.out.print("Ingrese el número del nodo adyacente al nodo "+i+". De no haber ninguno por agregar, ingrese '-': ");
+                String rpta = lect.next();
+                if(!rpta.equals("-")){
+                    if(Integer.valueOf(rpta)>=tam || Integer.valueOf(rpta)<0){
+                        System.out.println(" *** Número de nodo no válido *** ");
+                    } else{
+                        int ady = Integer.valueOf(rpta);
+                        System.out.print("Ingrese el peso entre ambos nodos: ");
+                        int peso = lect.nextInt();
+                        MatAdy[i][ady] = peso;
+                    }
+                } else break;
+            }
+            System.out.println();
+        }
+        imprimirMat(MatAdy);
+        return MatAdy;
     }
     
-    public int distMin(int distancias[], Boolean recorrido[]){
+    public static void imprimirMat(int[][] mat){
+        System.out.println("Matriz generada: ");
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat.length; j++) {
+                System.out.print(mat[i][j]+" ");
+            }
+            System.out.println("");
+        }
+    }
+    
+    public static int distMin(int distancias[], Boolean recorrido[], int tam){
         int min = Integer.MAX_VALUE;
         int posDelMinimo = -1;   
-        for (int v = 0; v < this.nroVertices; v++) 
+        for (int v = 0; v < tam; v++) 
             if (recorrido[v] == false && distancias[v] <= min) { 
                 min = distancias[v]; 
                 posDelMinimo = v; 
@@ -19,23 +51,22 @@ public class Dijkstra{
         return posDelMinimo; 
     }
     
-    public void imprimir(int distancias[], String[] camino) 
+    public static void imprimir(int distancias[], String[] camino, int tam) 
     { 
         System.out.println("Nro Router \t Distancia desde origen \t Camino"); 
-        for (int i = 0; i < this.nroVertices; i++) 
+        for (int i = 0; i < tam; i++) 
             System.out.println(i + " \t\t " + distancias[i]+ " \t\t\t\t " +camino[i]); 
     } 
-    public void algoritmo(int matAdy[][], int src) 
+    public static void algoritmo(int matAdy[][], int src, int tam) 
     { 
         // Arreglo que guardará la distancia menor del nodo origen hacia los demás nodos
-        int distancias[] = new int[this.nroVertices];         
+        int distancias[] = new int[tam];         
   
         // Arreglo que almacenará el valor de Verdadero cuando se haya hallado el menor camino desde el origen.
-        Boolean recorridos[] = new Boolean[this.nroVertices]; 
+        Boolean recorridos[] = new Boolean[tam]; 
         String[] camino = new String[matAdy.length];
         // Inicializar las distancias en infinito y la lista de nodos recorridos en Falso
-        // Inicializar el Arraylist "Caminos" con n espacios, siendo n la cantidad de vértices
-        for (int i = 0; i < this.nroVertices; i++) { 
+        for (int i = 0; i < tam; i++) { 
             distancias[i] = Integer.MAX_VALUE; 
             recorridos[i] = false;
         } 
@@ -47,14 +78,14 @@ public class Dijkstra{
         camino[src] = String.valueOf(src);
         
         // Para cada vértice:
-        for (int count = 0; count < this.nroVertices; count++) { 
+        for (int count = 0; count < tam; count++) { 
             // Se busca el nodo con menor distancia al origen de la lista de nodos que aún no han sido recorridos.
             // (En la primera iteración, siempre saldrá el nodo origen, pues es 0 y los demás infinito)
-            int u = distMin(distancias, recorridos); 
+            int u = distMin(distancias, recorridos, matAdy.length); 
             // Marcar el nodo escogido como Recorrido
             recorridos[u] = true; 
             // Actualiza la distancia entre el nodo origen y los vértices adyacente
-            for (int v = 0; v < this.nroVertices; v++){                
+            for (int v = 0; v < tam; v++){                
                 /*Condiciones:
                 1. Que el vértice a actualizar no haya sido recorrido anteriormente.
                 2. Que haya un camino hacia dicho vértice (valor en la matriz de adyacencia diferente a 0).
@@ -68,23 +99,77 @@ public class Dijkstra{
                 }
             } 
         } 
-        imprimir(distancias,camino); 
+        imprimir(distancias,camino, matAdy.length); 
+        preguntar(matAdy);
     }
-
-
+    
+    public static void preguntar(int[][] matriz){
+        System.out.println("Escriba el número de alguna de las opciones mostradas para continuar: ");
+        System.out.println("1. Consultar los caminos y pesos con otro nodo origen y misma topología. ");
+        System.out.println("2. Ingresar nueva topología.");
+        System.out.println("3. Cerrar programa.");
+        Scanner lector = new Scanner(System.in);
+        int src;
+        int resp = lector.nextInt();
+        switch(resp){
+            case 1:
+                System.out.print("Ingrese número del nodo origen: ");
+                src = lector.nextInt();
+                while(src<0 || src>=matriz.length){
+                    System.out.print("Nodo inválido. Pruebe otra vez: ");
+                    src = lector.nextInt();
+                }
+                algoritmo(matriz, src, matriz.length);
+                break;
+            case 2: 
+                int MatAdy[][] = crearMatriz();
+                System.out.println();
+                System.out.print("¿Nodo origen? ");
+                src = lector.nextInt();
+                System.out.println();
+                algoritmo(MatAdy, src, MatAdy.length); 
+                break;
+            case 3:
+                System.out.println("Finalizando programa...");
+                break;
+        }
+    }
+    
     public static void main(String[] args) 
     { 
-        
-        int MatAdy[][] = new int[][] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, 
-                                       { 4, 0, 8, 0, 0, 0, 0, 11, 0 }, 
-                                       { 0, 8, 0, 7, 0, 4, 0, 0, 2 }, 
-                                       { 0, 0, 7, 0, 9, 14, 0, 0, 0 }, 
-                                       { 0, 0, 0, 9, 0, 10, 0, 0, 0 }, 
-                                       { 0, 0, 4, 14, 10, 0, 2, 0, 0 }, 
-                                       { 0, 0, 0, 0, 0, 2, 0, 1, 6 }, 
-                                       { 8, 11, 0, 0, 0, 0, 1, 0, 7 }, 
-                                       { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
-        Dijkstra t = new Dijkstra(MatAdy.length); 
-        t.algoritmo(MatAdy, 0); 
+        /*int MatAdy[][] = new int[][] { { 0, 2, 4}, 
+                                       { 2, 3, 1}, 
+                                       { 4, 3, 2,}};*/
+        /*int MatAdy[][] = new int[][] { { 0, 8, 10, 0, 0 }, 
+                                       { 8, 0, 3, 8, 0 }, 
+                                       { 10, 3, 0, 5, 3 }, 
+                                       { 0, 8, 5, 0, 6 }, 
+                                       { 0, 0, 3, 6, 0 }};*/
+        /*int MatAdy[][] = new int[][] { { 0, 8, 10, 0, 0, 4, 0, 0 }, 
+                                       { 8, 0, 3, 8, 0, 3, 6, 0 }, 
+                                       { 10, 3, 0, 5, 3, 0, 0, 0 }, 
+                                       { 0, 8, 5, 0, 6, 0, 8, 5 }, 
+                                       { 0, 0, 3, 6, 0, 0, 0, 3 }, 
+                                       { 4, 3, 0, 0, 0, 0, 9, 0 }, 
+                                       { 0, 6, 0, 8, 0, 9, 0, 9 }, 
+                                       { 0, 0, 0, 5, 3, 0, 9, 0 }}; */
+        /*int MatAdy[][] = new int[][] { { 0, 2, 0, 0, 10, 0, 0, 0, 0, 0, 15 }, 
+                                       { 2, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0 }, 
+                                       { 0, 8, 0, 0, 0, 0, 0, 0, 4, 0, 2 }, 
+                                       { 0, 9, 0, 7, 0, 3, 0, 0, 0, 0, 0 }, 
+                                       { 10, 0, 0, 7, 0, 5, 2, 0, 0, 0, 0 }, 
+                                       { 0, 0, 0, 0, 5, 0, 9, 0, 0, 0, 0 }, 
+                                       { 0, 0, 0, 0, 2, 9, 0, 8, 0, 0, 0 }, 
+                                       { 0, 0, 0, 3, 0, 0, 8, 0, 5, 0, 0 }, 
+                                       { 0, 0, 4, 0, 0, 0, 0, 5, 0, 10, 0 },
+                                       { 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 5 },
+                                       { 15, 0, 2, 0, 0, 0, 0, 0, 10, 5, 0 }};*/
+        int MatAdy[][] = crearMatriz();
+        System.out.println();
+        System.out.print("¿Nodo origen? ");
+        Scanner lector = new Scanner(System.in);
+        int src = lector.nextInt();
+        System.out.println();
+        algoritmo(MatAdy, src, MatAdy.length);        
     } 
 }
