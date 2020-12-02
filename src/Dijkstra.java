@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntime.runtime;
 
 public class Dijkstra{
     
@@ -59,6 +60,10 @@ public class Dijkstra{
     } 
     public static void algoritmo(int matAdy[][], int src, int tam) 
     { 
+        // Se inicia a contar el tiempo de ejecución para las comparaciones: 
+        long startTime = System.nanoTime();
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
         // Arreglo que guardará la distancia menor del nodo origen hacia los demás nodos
         int distancias[] = new int[tam];         
   
@@ -100,6 +105,12 @@ public class Dijkstra{
             } 
         } 
         imprimir(distancias,camino, matAdy.length); 
+        long stopTime = System.nanoTime();
+        long elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Used memory is bytes: " + memory);
+        System.out.println("Tiempo de ejecución: "+elapsedTime);
         preguntar(matAdy);
     }
     
@@ -137,9 +148,9 @@ public class Dijkstra{
     
     public static void main(String[] args) 
     { 
-        /*int MatAdy[][] = new int[][] { { 0, 2, 4}, 
+        int MatAdy[][] = new int[][] { { 0, 2, 4}, 
                                        { 2, 3, 1}, 
-                                       { 4, 3, 2,}};*/
+                                       { 4, 3, 2,}};
         /*int MatAdy[][] = new int[][] { { 0, 8, 10, 0, 0 }, 
                                        { 8, 0, 3, 8, 0 }, 
                                        { 10, 3, 0, 5, 3 }, 
@@ -164,7 +175,7 @@ public class Dijkstra{
                                        { 0, 0, 4, 0, 0, 0, 0, 5, 0, 10, 0 },
                                        { 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 5 },
                                        { 15, 0, 2, 0, 0, 0, 0, 0, 10, 5, 0 }};*/
-        int MatAdy[][] = crearMatriz();
+        //int MatAdy[][] = crearMatriz();
         System.out.println();
         System.out.print("¿Nodo origen? ");
         Scanner lector = new Scanner(System.in);
